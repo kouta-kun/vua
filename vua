@@ -1,0 +1,27 @@
+#!/bin/bash
+# Copyleft (C) kouta-kun, whatever GPL version is most recent when you read this
+
+function check_repo() {
+    if [ ! -d $VITASDK/packages ]; then
+	cd $VITASDK;
+	git clone https://github.com/vitasdk/packages;
+    fi;
+    cd $VITASDK/packages; git pull
+}
+
+function build_package() {
+    if [ ! -d $VITASDK/packages/$1 -o -z "$1" ]; then
+	echo "package not found, please check name";
+	return 1;
+    fi;
+    cd $VITASDK/packages/$1;
+    echo building package $1;
+    if ! vita-makepkg -f; then
+	echo "failed to build package!";
+	return 2;
+    fi;
+    vdpm ./$1*.tar.xz;
+}
+
+check_repo;
+build_package $1;
