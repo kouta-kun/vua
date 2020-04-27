@@ -14,7 +14,9 @@ function build_package() {
 	echo "package not found, please check name";
 	return 1;
     fi;
-    cd $VITASDK/packages/$1;
+    cd $VITASDK/packages;
+    cp -r $1 /tmp/$1;
+    cd /tmp/$1;
     echo building package $1;
     if ! vita-makepkg -f; then
 	echo "failed to build package!";
